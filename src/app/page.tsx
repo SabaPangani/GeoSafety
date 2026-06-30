@@ -7,6 +7,7 @@ import { StatsBar } from "@/components/dashboard/StatsBar";
 import { TransactionsTable } from "@/components/dashboard/TransactionsTable";
 import { ExpectedVsActual } from "@/components/dashboard/ExpectedVsActual";
 import { RunMatchingButton } from "@/components/dashboard/RunMatchingButton";
+import { StatCard, StatusBadge, Button } from "@/components/ui";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useIgnoreTransaction } from "@/hooks/useIgnoreTransaction";
 import { filtersSchema, type DashboardFilters } from "@/lib/schemas/filters";
@@ -58,6 +59,26 @@ export default function DashboardPage() {
   return (
     <main className="min-h-full w-full bg-gray-50 text-gray-900">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
+        {/* Design system preview — temporary; remove once the dark theme is wired into the dashboard. */}
+        <section className="rounded-card bg-background p-6 ring-1 ring-border">
+          <h2 className="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">
+            Design system preview
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <StatCard label="Total volume" value="₾ 128,450.00" />
+            <StatCard variant="hero" label="Match rate" value="92.4%" />
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <StatusBadge status="matched" />
+            <StatusBadge status="unmatched" />
+            <StatusBadge status="ignored" />
+          </div>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <Button>Run matching</Button>
+            <Button variant="ghost">Cancel</Button>
+          </div>
+        </section>
+
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
