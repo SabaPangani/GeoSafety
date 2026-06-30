@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { MonthNavigator } from "@/components/dashboard/MonthNavigator";
 import { StatsBar } from "@/components/dashboard/StatsBar";
@@ -36,6 +36,13 @@ export default function DashboardPage() {
 
   const setStatus = (status: DashboardFilters["status"]) =>
     setRawFilters((prev) => ({ ...prev, status }));
+
+  // Stable identity so SearchInput's debounce effect isn't reset each render.
+  const setSearch = useCallback(
+    (search: string) =>
+      setRawFilters((prev) => ({ ...prev, search: search || undefined })),
+    [],
+  );
 
   const handleSort = (column: DashboardFilters["sortBy"]) =>
     setRawFilters((prev) => {
@@ -79,8 +86,10 @@ export default function DashboardPage() {
           sortBy={filters.sortBy}
           sortDir={filters.sortDir}
           statusFilter={filters.status}
+          search={filters.search ?? ""}
           onSort={handleSort}
           onStatusFilterChange={setStatus}
+          onSearchChange={setSearch}
           onIgnore={(id) => ignore.mutate(id)}
           ignoringId={ignore.isPending ? ignore.variables : null}
         />
