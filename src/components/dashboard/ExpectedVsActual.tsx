@@ -9,7 +9,6 @@ interface ExpectedVsActualProps {
   month: string;
 }
 
-/** Tailwind row styling per the expected/actual relationship. */
 function rowClass(row: ExpectedVsActualRow): string {
   if (row.actual === 0 && row.expected > 0) {
     return "bg-gray-50 text-gray-500";
