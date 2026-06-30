@@ -4,19 +4,22 @@ import { useExpectedVsActual } from "@/hooks/useExpectedVsActual";
 import type { ExpectedVsActualRow } from "@/lib/services/reconciliation";
 import { formatMoney } from "@/lib/format";
 import { expectedVsActualToCsv } from "@/lib/export/csv";
+import { Card, Button } from "@/components/ui";
 
 interface ExpectedVsActualProps {
   month: string;
 }
 
-function rowClass(row: ExpectedVsActualRow): string {
+/** Semantic color for the difference cell: gray when nothing came in, green
+ *  when actual covers expected, coral when short. */
+function differenceClass(row: ExpectedVsActualRow): string {
   if (row.actual === 0 && row.expected > 0) {
-    return "bg-gray-50 text-gray-500";
+    return "text-ignored";
   }
   if (row.actual >= row.expected) {
-    return "bg-green-50 text-green-800";
+    return "text-matched";
   }
-  return "bg-red-50 text-red-800";
+  return "text-unmatched";
 }
 
 const COLUMN_COUNT = 4;
@@ -43,24 +46,23 @@ export function ExpectedVsActual({ month }: ExpectedVsActualProps) {
   };
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-4 py-3">
-        <h2 className="text-base font-semibold text-gray-900">
+    <Card padding="none">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
+        <h2 className="text-base font-semibold text-text">
           Expected vs. actual
         </h2>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           onClick={handleExport}
           disabled={isLoading || !hasRows}
-          className="cursor-pointer rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           ექსპორტი CSV
-        </button>
+        </Button>
       </header>
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[560px] text-left text-sm">
-          <thead className="border-b border-gray-200 text-xs uppercase tracking-wide text-gray-500">
+          <thead className="border-b border-border text-xs uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-3 font-medium">Company</th>
               <th className="px-4 py-3 text-right font-medium">Expected</th>
@@ -68,12 +70,12 @@ export function ExpectedVsActual({ month }: ExpectedVsActualProps) {
               <th className="px-4 py-3 text-right font-medium">Difference</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border">
             {isError ? (
               <tr>
                 <td
                   colSpan={COLUMN_COUNT}
-                  className="px-4 py-10 text-center text-sm text-red-600"
+                  className="px-4 py-10 text-center text-sm text-unmatched"
                 >
                   Failed to load reconciliation data.
                 </td>
@@ -83,7 +85,7 @@ export function ExpectedVsActual({ month }: ExpectedVsActualProps) {
                 <tr key={index}>
                   {Array.from({ length: COLUMN_COUNT }).map((__, cell) => (
                     <td key={cell} className="px-4 py-3">
-                      <div className="h-4 animate-pulse rounded bg-gray-100" />
+                      <div className="h-4 animate-pulse rounded bg-surface-2" />
                     </td>
                   ))}
                 </tr>
@@ -92,22 +94,29 @@ export function ExpectedVsActual({ month }: ExpectedVsActualProps) {
               <tr>
                 <td
                   colSpan={COLUMN_COUNT}
-                  className="px-4 py-10 text-center text-sm text-gray-500"
+                  className="px-4 py-10 text-center text-sm text-muted"
                 >
                   No reconciliation data for this month.
                 </td>
               </tr>
             ) : (
               data.map((row) => (
-                <tr key={row.company_id} className={rowClass(row)}>
+                <tr
+                  key={row.company_id}
+                  className="text-text/90 transition-colors hover:bg-surface-2"
+                >
                   <td className="px-4 py-3 font-medium">{row.company_name}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right">
+                  <td className="tabular whitespace-nowrap px-4 py-3 text-right text-muted">
                     {formatMoney(row.expected)}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right">
+                  <td className="tabular whitespace-nowrap px-4 py-3 text-right">
                     {formatMoney(row.actual)}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right font-medium">
+                  <td
+                    className={`tabular whitespace-nowrap px-4 py-3 text-right font-medium ${differenceClass(
+                      row,
+                    )}`}
+                  >
                     {formatMoney(row.difference)}
                   </td>
                 </tr>
@@ -116,6 +125,6 @@ export function ExpectedVsActual({ month }: ExpectedVsActualProps) {
           </tbody>
         </table>
       </div>
-    </section>
+    </Card>
   );
 }

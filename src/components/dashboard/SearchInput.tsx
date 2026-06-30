@@ -47,7 +47,7 @@ export function SearchInput({
       value={local}
       onChange={(event) => setLocal(event.target.value)}
       placeholder={placeholder}
-      className="w-56 rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none"
+      className="w-56 rounded-md border border-border bg-surface-2 px-3 py-1 text-sm text-text placeholder:text-dim focus:border-accent focus:outline-none"
     />
   );
 }

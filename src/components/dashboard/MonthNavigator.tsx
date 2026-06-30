@@ -16,31 +16,45 @@ interface MonthNavigatorProps {
   onChange: (month: string) => void;
 }
 
+/** Uppercases the month label and sets the year off with a comma: "JUNE, 2026". */
+function formatLabel(label: string): string {
+  return label.replace(" ", ", ").toUpperCase();
+}
+
 export function MonthNavigator({ month, onChange }: MonthNavigatorProps) {
+  const index = MONTHS.findIndex((option) => option.value === month);
+  const current = index === -1 ? undefined : MONTHS[index];
+  const previous = index > 0 ? MONTHS[index - 1] : undefined;
+  const next =
+    index !== -1 && index < MONTHS.length - 1 ? MONTHS[index + 1] : undefined;
+
   return (
     <div
       role="group"
       aria-label="Select month"
-      className="inline-flex rounded-lg border border-gray-200 bg-white p-1 shadow-sm"
+      className="inline-flex items-center gap-1 rounded-ctrl border border-border bg-surface p-1"
     >
-      {MONTHS.map((option) => {
-        const isActive = option.value === month;
-        return (
-          <button
-            key={option.value}
-            type="button"
-            aria-pressed={isActive}
-            onClick={() => onChange(option.value)}
-            className={`cursor-pointer rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-              isActive
-                ? "bg-gray-900 text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            {option.label}
-          </button>
-        );
-      })}
+      <button
+        type="button"
+        aria-label="Previous month"
+        disabled={!previous}
+        onClick={() => previous && onChange(previous.value)}
+        className="flex size-8 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-2 hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-muted"
+      >
+        ‹
+      </button>
+      <span className="min-w-36 px-2 text-center text-sm font-semibold uppercase tracking-wide text-text">
+        {current ? formatLabel(current.label) : "—"}
+      </span>
+      <button
+        type="button"
+        aria-label="Next month"
+        disabled={!next}
+        onClick={() => next && onChange(next.value)}
+        className="flex size-8 cursor-pointer items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-2 hover:text-accent disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-muted"
+      >
+        ›
+      </button>
     </div>
   );
 }
