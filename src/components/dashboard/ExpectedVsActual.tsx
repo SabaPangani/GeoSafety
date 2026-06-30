@@ -52,7 +52,7 @@ export function ExpectedVsActual({ month }: ExpectedVsActualProps) {
           type="button"
           onClick={handleExport}
           disabled={isLoading || !hasRows}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="cursor-pointer rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           ექსპორტი CSV
         </button>

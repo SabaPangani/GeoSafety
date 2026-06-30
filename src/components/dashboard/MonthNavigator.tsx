@@ -31,7 +31,7 @@ export function MonthNavigator({ month, onChange }: MonthNavigatorProps) {
             type="button"
             aria-pressed={isActive}
             onClick={() => onChange(option.value)}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+            className={`cursor-pointer rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
               isActive
                 ? "bg-gray-900 text-white"
                 : "text-gray-600 hover:bg-gray-100"
