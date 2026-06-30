@@ -4,6 +4,8 @@ import type { TransactionWithCompany } from "@/lib/services/transactions";
 import type { DashboardFilters } from "@/lib/schemas/filters";
 import { formatMoney } from "@/lib/format";
 
+import { SearchInput } from "./SearchInput";
+
 type SortColumn = DashboardFilters["sortBy"];
 type StatusFilter = DashboardFilters["status"];
 
@@ -14,8 +16,10 @@ interface TransactionsTableProps {
   sortBy: SortColumn;
   sortDir: DashboardFilters["sortDir"];
   statusFilter: StatusFilter;
+  search: string;
   onSort: (column: SortColumn) => void;
   onStatusFilterChange: (status: StatusFilter) => void;
+  onSearchChange: (search: string) => void;
   onIgnore: (id: string) => void;
   ignoringId: string | null;
 }
@@ -88,8 +92,10 @@ export function TransactionsTable({
   sortBy,
   sortDir,
   statusFilter,
+  search,
   onSort,
   onStatusFilterChange,
+  onSearchChange,
   onIgnore,
   ignoringId,
 }: TransactionsTableProps) {
@@ -97,22 +103,29 @@ export function TransactionsTable({
     <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
       <header className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-4 py-3">
         <h2 className="text-base font-semibold text-gray-900">Transactions</h2>
-        <label className="flex items-center gap-2 text-sm text-gray-600">
-          Status
-          <select
-            value={statusFilter}
-            onChange={(event) =>
-              onStatusFilterChange(event.target.value as StatusFilter)
-            }
-            className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm capitalize text-gray-900"
-          >
-            {STATUS_FILTERS.map((value) => (
-              <option key={value} value={value} className="capitalize">
-                {value}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="flex flex-wrap items-center gap-3">
+          <SearchInput
+            value={search}
+            onChange={onSearchChange}
+            placeholder="Search sender or INN"
+          />
+          <label className="flex items-center gap-2 text-sm text-gray-600">
+            Status
+            <select
+              value={statusFilter}
+              onChange={(event) =>
+                onStatusFilterChange(event.target.value as StatusFilter)
+              }
+              className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm capitalize text-gray-900"
+            >
+              {STATUS_FILTERS.map((value) => (
+                <option key={value} value={value} className="capitalize">
+                  {value}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
       </header>
 
       <div className="overflow-x-auto">
