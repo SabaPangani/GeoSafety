@@ -70,7 +70,7 @@ function SortHeader({
       <button
         type="button"
         onClick={() => onSort(column)}
-        className={`inline-flex items-center gap-1 hover:text-gray-900 ${
+        className={`inline-flex cursor-pointer items-center gap-1 hover:text-gray-900 ${
           isActive ? "text-gray-900" : "text-gray-500"
         }`}
       >
@@ -116,7 +116,7 @@ export function TransactionsTable({
               onChange={(event) =>
                 onStatusFilterChange(event.target.value as StatusFilter)
               }
-              className="rounded-md border border-gray-300 bg-white px-2 py-1 text-sm capitalize text-gray-900"
+              className="cursor-pointer rounded-md border border-gray-300 bg-white px-2 py-1 text-sm capitalize text-gray-900"
             >
               {STATUS_FILTERS.map((value) => (
                 <option key={value} value={value} className="capitalize">
@@ -204,7 +204,7 @@ export function TransactionsTable({
                         type="button"
                         onClick={() => onIgnore(tx.id)}
                         disabled={ignoringId === tx.id}
-                        className="rounded-md border border-gray-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="cursor-pointer rounded-md border border-gray-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         {ignoringId === tx.id ? "Ignoring…" : "Ignore"}
                       </button>
