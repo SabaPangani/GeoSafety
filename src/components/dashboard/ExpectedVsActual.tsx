@@ -3,12 +3,12 @@
 import { useExpectedVsActual } from "@/hooks/useExpectedVsActual";
 import type { ExpectedVsActualRow } from "@/lib/services/reconciliation";
 import { formatMoney } from "@/lib/format";
+import { expectedVsActualToCsv } from "@/lib/export/csv";
 
 interface ExpectedVsActualProps {
   month: string;
 }
 
-/** Tailwind row styling per the expected/actual relationship. */
 function rowClass(row: ExpectedVsActualRow): string {
   if (row.actual === 0 && row.expected > 0) {
     return "bg-gray-50 text-gray-500";
@@ -24,12 +24,38 @@ const COLUMN_COUNT = 4;
 export function ExpectedVsActual({ month }: ExpectedVsActualProps) {
   const { data, isLoading, isError } = useExpectedVsActual(month);
 
+  const hasRows = !!data && data.length > 0;
+
+  const handleExport = () => {
+    if (!data || data.length === 0) {
+      return;
+    }
+    const csv = expectedVsActualToCsv(data);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `reconciliation-${month.slice(0, 7)}.csv`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section className="rounded-xl border border-gray-200 bg-white shadow-sm">
-      <header className="border-b border-gray-200 px-4 py-3">
+      <header className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 px-4 py-3">
         <h2 className="text-base font-semibold text-gray-900">
           Expected vs. actual
         </h2>
+        <button
+          type="button"
+          onClick={handleExport}
+          disabled={isLoading || !hasRows}
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          ექსპორტი CSV
+        </button>
       </header>
 
       <div className="overflow-x-auto">
