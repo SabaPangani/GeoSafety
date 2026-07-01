@@ -84,7 +84,7 @@ export function StatsBar({ transactions, isLoading, isError }: StatsBarProps) {
         label="Matched"
         value={
           <>
-            {stats.matched.count} tx
+            <span className="text-matched">{stats.matched.count} tx</span>
             <span className="mt-1 block text-sm font-normal text-muted">
               {formatMoney(stats.matched.sum)}
             </span>
@@ -95,7 +95,7 @@ export function StatsBar({ transactions, isLoading, isError }: StatsBarProps) {
         label="Unmatched"
         value={
           <>
-            {stats.unmatched.count} tx
+            <span className="text-unmatched">{stats.unmatched.count} tx</span>
             <span className="mt-1 block text-sm font-normal text-muted">
               {formatMoney(stats.unmatched.sum)}
             </span>
