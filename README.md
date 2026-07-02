@@ -1,6 +1,6 @@
 Live demo
 
-https://your-vercel-url.vercel.app 
+https://geo-safety-iota.vercel.app/
 
 Getting started
 
