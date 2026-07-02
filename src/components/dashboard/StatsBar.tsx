@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import type { TransactionWithCompany } from "@/lib/services/transactions";
 import { formatMoney } from "@/lib/format";
+import { StatCard } from "@/components/ui";
 
 interface StatsBarProps {
   /** The full month's transactions (unfiltered by status). */
@@ -39,28 +40,6 @@ function summarize(transactions: TransactionWithCompany[]) {
   return { total, matched, unmatched, matchRate };
 }
 
-function StatCard({
-  label,
-  primary,
-  secondary,
-  accent,
-}: {
-  label: string;
-  primary: string;
-  secondary: string;
-  accent: string;
-}) {
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-      <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-        {label}
-      </p>
-      <p className={`mt-1 text-2xl font-semibold ${accent}`}>{primary}</p>
-      <p className="mt-0.5 text-sm text-gray-500">{secondary}</p>
-    </div>
-  );
-}
-
 export function StatsBar({ transactions, isLoading, isError }: StatsBarProps) {
   const stats = useMemo(
     () => summarize(transactions ?? []),
@@ -69,7 +48,7 @@ export function StatsBar({ transactions, isLoading, isError }: StatsBarProps) {
 
   if (isError) {
     return (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+      <div className="rounded-card border border-border bg-unmatched-bg p-4 text-sm text-unmatched">
         Failed to load statistics.
       </div>
     );
@@ -81,7 +60,7 @@ export function StatsBar({ transactions, isLoading, isError }: StatsBarProps) {
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="h-[88px] animate-pulse rounded-xl border border-gray-200 bg-gray-100"
+            className="h-23 animate-pulse rounded-card border border-border bg-surface-2"
           />
         ))}
       </div>
@@ -92,27 +71,48 @@ export function StatsBar({ transactions, isLoading, isError }: StatsBarProps) {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <StatCard
         label="Total"
-        primary={`${stats.total.count} tx`}
-        secondary={formatMoney(stats.total.sum)}
-        accent="text-gray-900"
+        value={
+          <>
+            {stats.total.count} tx
+            <span className="mt-1 block text-sm font-normal text-muted">
+              {formatMoney(stats.total.sum)}
+            </span>
+          </>
+        }
       />
       <StatCard
         label="Matched"
-        primary={`${stats.matched.count} tx`}
-        secondary={formatMoney(stats.matched.sum)}
-        accent="text-green-600"
+        value={
+          <>
+            <span className="text-matched">{stats.matched.count} tx</span>
+            <span className="mt-1 block text-sm font-normal text-muted">
+              {formatMoney(stats.matched.sum)}
+            </span>
+          </>
+        }
       />
       <StatCard
         label="Unmatched"
-        primary={`${stats.unmatched.count} tx`}
-        secondary={formatMoney(stats.unmatched.sum)}
-        accent="text-red-600"
+        value={
+          <>
+            <span className="text-unmatched">{stats.unmatched.count} tx</span>
+            <span className="mt-1 block text-sm font-normal text-muted">
+              {formatMoney(stats.unmatched.sum)}
+            </span>
+          </>
+        }
       />
       <StatCard
+        variant="hero"
         label="Match rate"
-        primary={`${stats.matchRate.toFixed(1)}%`}
-        secondary={`${stats.matched.count} of ${stats.total.count}`}
-        accent="text-gray-900"
+        value={
+          <>
+            {stats.matchRate.toFixed(1)}%
+            <span className="mt-1 block text-sm font-normal text-white/80">
+              {stats.matched.count} of {stats.total.count}
+            </span>
+          </>
+        }
       />
     </div>
   );

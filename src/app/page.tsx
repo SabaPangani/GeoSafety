@@ -56,14 +56,14 @@ export default function DashboardPage() {
     });
 
   return (
-    <main className="min-h-full w-full bg-gray-50 text-gray-900">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8">
+    <main className="min-h-full w-full bg-background text-text">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6">
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
               Payment Reconciliation
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted">
               Match bank transactions to companies and track expected income.
             </p>
           </div>
