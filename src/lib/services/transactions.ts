@@ -63,6 +63,17 @@ function getMonthBounds(month: string): MonthBounds {
   return { monthStart: month, monthNext };
 }
 
+/**
+ * Strips characters that are significant in a PostgREST `.or()` filter string
+ * before the term is interpolated into one. Commas separate conditions,
+ * parentheses group them, and `%`/`*`/`\` are pattern metacharacters — leaving
+ * any of these in raw user input would let a search term alter the filter
+ * structure rather than just the matched text.
+ */
+function sanitizeSearchTerm(term: string): string {
+  return term.replace(/[,()%*\\]/g, "").trim();
+}
+
 export async function getTransactions({
   month,
   status,
@@ -80,7 +91,7 @@ export async function getTransactions({
     query = query.eq("status", status);
   }
 
-  const term = search.trim();
+  const term = sanitizeSearchTerm(search);
   if (term) {
     query = query.or(
       `sender_name.ilike.%${term}%,sender_inn.ilike.%${term}%`,
