@@ -7,8 +7,16 @@ Getting started
 1. Prerequisites
 Node.js 14+ and npm
 A free Supabase project
-2. Install
+
+3. Install
 npm install
+
+4. Environment variables
+
+Create a .env.local file in the project root:
+
+NEXT_PUBLIC_SUPABASE_URL=https://<your-project-id>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-publishable-key>
 
 Database setup
 
